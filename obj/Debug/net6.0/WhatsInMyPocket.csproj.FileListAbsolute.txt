@@ -1,0 +1,15 @@
+/Users/jarrodherbert/RiderProjects/WhatsInMyPocket/WhatsInMyPocket/bin/Debug/net6.0/WhatsInMyPocket
+/Users/jarrodherbert/RiderProjects/WhatsInMyPocket/WhatsInMyPocket/bin/Debug/net6.0/WhatsInMyPocket.deps.json
+/Users/jarrodherbert/RiderProjects/WhatsInMyPocket/WhatsInMyPocket/bin/Debug/net6.0/WhatsInMyPocket.runtimeconfig.json
+/Users/jarrodherbert/RiderProjects/WhatsInMyPocket/WhatsInMyPocket/bin/Debug/net6.0/WhatsInMyPocket.dll
+/Users/jarrodherbert/RiderProjects/WhatsInMyPocket/WhatsInMyPocket/bin/Debug/net6.0/WhatsInMyPocket.pdb
+/Users/jarrodherbert/RiderProjects/WhatsInMyPocket/WhatsInMyPocket/obj/Debug/net6.0/WhatsInMyPocket.csproj.AssemblyReference.cache
+/Users/jarrodherbert/RiderProjects/WhatsInMyPocket/WhatsInMyPocket/obj/Debug/net6.0/WhatsInMyPocket.GeneratedMSBuildEditorConfig.editorconfig
+/Users/jarrodherbert/RiderProjects/WhatsInMyPocket/WhatsInMyPocket/obj/Debug/net6.0/WhatsInMyPocket.AssemblyInfoInputs.cache
+/Users/jarrodherbert/RiderProjects/WhatsInMyPocket/WhatsInMyPocket/obj/Debug/net6.0/WhatsInMyPocket.AssemblyInfo.cs
+/Users/jarrodherbert/RiderProjects/WhatsInMyPocket/WhatsInMyPocket/obj/Debug/net6.0/WhatsInMyPocket.csproj.CoreCompileInputs.cache
+/Users/jarrodherbert/RiderProjects/WhatsInMyPocket/WhatsInMyPocket/obj/Debug/net6.0/WhatsInMyPocket.dll
+/Users/jarrodherbert/RiderProjects/WhatsInMyPocket/WhatsInMyPocket/obj/Debug/net6.0/refint/WhatsInMyPocket.dll
+/Users/jarrodherbert/RiderProjects/WhatsInMyPocket/WhatsInMyPocket/obj/Debug/net6.0/WhatsInMyPocket.pdb
+/Users/jarrodherbert/RiderProjects/WhatsInMyPocket/WhatsInMyPocket/obj/Debug/net6.0/WhatsInMyPocket.genruntimeconfig.cache
+/Users/jarrodherbert/RiderProjects/WhatsInMyPocket/WhatsInMyPocket/obj/Debug/net6.0/ref/WhatsInMyPocket.dll
