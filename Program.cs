@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
- 
+using System.Runtime.CompilerServices;
+
 namespace PokerDemo
 {
     class Program
@@ -10,16 +11,16 @@ namespace PokerDemo
         static void Main(string[] args)
         {
             var deck = new Deck();
-            var hand = deck.GetHand();
+            // var hand = deck.GetHand();
             //var hand = deck.GetHandWithPair();
             //var hand = deck.GetHandWithTwoPair();
             //var hand = deck.GetHandWithThreeOfAKind();
             //var hand = deck.GetHandWithStraight();
-            // var hand = deck.GetHandWithFlush();
+            //var hand = deck.GetHandWithFlush();
             //var hand = deck.GetHandWithFullHouse();
             //var hand = deck.GetHandWithFourOfAKind();
             //var hand = deck.GetHandWithStraightFlush();
-            // var hand = deck.GetHandWithRoyalFlush();
+            var hand = deck.GetHandWithRoyalFlush();
             
             print("Your hand is...");
             foreach(var card in hand)
@@ -35,13 +36,13 @@ namespace PokerDemo
         {
             List<Card> ordered = OrderHandByValue(hand);
             
-            if (HandIsRoyalFlush(hand))
+            if (HandIsRoyalFlush(ordered))
                 return HandType.ROYAL_FLUSH;
-
+            
             // if (HandIsStraightFlush(hand))
                 // return HandType.STRAIGHT_FLUSH;
             
-            if (HandIsFlush(hand))
+            if (HandIsFlush(ordered))
                 return HandType.FLUSH;
             
             return HandType.NOTHING;
@@ -49,9 +50,7 @@ namespace PokerDemo
 
         private static List<Card> OrderHandByValue(List<Card> hand)
         {   
-            print($"cards: {hand[0]}, {hand[1]}, {hand[2]}, {hand[3]}, {hand[4]}");
-            print($"are cards in order: {HandIsOrderedByValue(hand)}");
-            
+
             List<Card> orderedList = new List<Card>();
             List<Card> tempList = new List<Card>();
 
@@ -74,8 +73,9 @@ namespace PokerDemo
                 tempList.Remove(lowestCard);
             }
 
-            print($"cards: {orderedList[0]}, {orderedList[1]}, {orderedList[2]}, {orderedList[3]}, {orderedList[4]}");
+            print($"cards ordered by value: {orderedList[0]}, {orderedList[1]}, {orderedList[2]}, {orderedList[3]}, {orderedList[4]}");
             print($"are cards in order: {HandIsOrderedByValue(orderedList)}");
+            print($"are cards sequential: {HandIsSequential(orderedList)}");
             return orderedList;
         }
 
@@ -105,6 +105,8 @@ namespace PokerDemo
 
         private static bool HandIsSequential(List<Card> hand)
         {
+            // TODO: Ace handling. IF orderedList[0].Value is TWO, and orderedList[4].Value is ACE, move ACE to index 0.
+            
             var startId = (int) hand[0].Value;
 
             for (int i = 0; i < 5; i++)
@@ -112,20 +114,12 @@ namespace PokerDemo
                 if (startId + i != (int) hand[i].Value)
                     return false;
             }
-
+            
             return true;
         }
 
         private static bool HandIsRoyalFlush(List<Card> hand)
         {
-            List<Value> requiredCardValues = new List<Value>();
-            
-            requiredCardValues.Add(Value.ACE);
-            requiredCardValues.Add(Value.KING);
-            requiredCardValues.Add(Value.QUEEN);
-            requiredCardValues.Add(Value.JACK);
-            requiredCardValues.Add(Value.TEN);
-
             if (!HandIsFlush(hand))
                 return false;
 
@@ -134,12 +128,9 @@ namespace PokerDemo
                 print($"Hand not sequential");
                 return false;
             }
-            
-            foreach (var card in hand)
-            {
-                if (!requiredCardValues.Contains(card.Value))
-                    return false;
-            }
+
+            if (hand[0].Value != Value.TEN)
+                return false;
             
             return true;
         }
