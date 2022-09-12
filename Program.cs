@@ -11,8 +11,8 @@ namespace PokerDemo
         static void Main(string[] args)
         {
             var deck = new Deck();
-            var hand = deck.GetHand();
-            // var hand = deck.GetHandWithPair();
+            //var hand = deck.GetHand();
+            //var hand = deck.GetHandWithPair();
             //var hand = deck.GetHandWithTwoPair();
             //var hand = deck.GetHandWithThreeOfAKind();
             //var hand = deck.GetHandWithStraight();
@@ -21,83 +21,69 @@ namespace PokerDemo
             //var hand = deck.GetHandWithFourOfAKind();
             //var hand = deck.GetHandWithStraightFlush();
             //var hand = deck.GetHandWithRoyalFlush();
-            
+
             print("Your hand is...");
-            foreach(var card in hand)
+            foreach (var card in hand)
             {
                 print($" - {card}");
             }
+
             printLine();
             print($"Your hand was: {EvaluateHand(hand)}");
             printLine();
         }
- 
+
         static HandType EvaluateHand(List<Card> hand)
         {
             List<Card> ordered = OrderHandByValue(hand);
             CardCountBySuit(ordered);
-            
+
             if (HandIsRoyalFlush(ordered))
                 return HandType.ROYAL_FLUSH;
-            
+
             if (HandIsStraightFlush(ordered))
                 return HandType.STRAIGHT_FLUSH;
-            
+
             if (HandIsFourOfAKind(ordered))
                 return HandType.FOUR_OF_A_KIND;
-            
+
+            // if (HandIsFullHouse(ordered))
+            // return HandType.FULL_HOUSE;
+
             if (HandIsFlush(ordered))
                 return HandType.FLUSH;
 
-            if (HandIsSequential(ordered))
+            if (HandIsStraight(ordered))
                 return HandType.STRAIGHT;
+
+            if (HandIsThreeOfAKind(ordered))
+                return HandType.THREE_OF_A_KIND;
 
             if (HandIsTwoPair(ordered))
                 return HandType.TWO_PAIR;
 
             if (HandIsPair(ordered))
                 return HandType.PAIR;
-            
+
             return HandType.NOTHING;
         }
 
-        private static bool HandIsTwoPair(List<Card> hand)
+        private static bool HandIsThreeOfAKind(List<Card> hand)
         {
-            var results = CardCountBySuit(hand);
-            int i = 0;
-            
+            var results = CardCountByValue(hand);
+
             foreach (var result in results)
             {
-                if ((int) result.Count() == 2)
-                    i++;
+                if ((int) result.Count() == 3)
+                    return true;
             }
 
-            if (i != 2)
-                return false;
-            
-            return true;
-        }
-        
-        private static bool HandIsPair(List<Card> hand)
-        {
-            var results = CardCountBySuit(hand);
-            int i = 0;
-            
-            foreach (var result in results)
-            {
-                if ((int) result.Count() == 2)
-                    i++;
-            }
-
-            if (i != 1)
-                return false;
-            
-            return true;
+            return false;
         }
 
         private static bool HandIsFourOfAKind(List<Card> hand)
         {
-            var results = CardCountBySuit(hand);
+            var results = CardCountByValue(hand);
 
             foreach (var result in results)
             {
@@ -108,11 +94,40 @@ namespace PokerDemo
             return false;
         }
 
-        private static IEnumerable<IGrouping<Value, Card>> CardCountBySuit(List<Card> hand)
+        private static int HowManyPairs(List<Card> hand)
+        {
+            var results = CardCountBySuit(hand);
+            int i = 0;
+
+            foreach (var result in results)
+            {
+                if ((int) result.Count() == 2)
+                    i++;
+            }
+
+            return i;
+        }
+
+        private static bool HandIsTwoPair(List<Card> hand)
+        {
+            return HowManyPairs(hand) == 1;
+        }
+
+        private static bool HandIsPair(List<Card> hand)
+        {
+            return HowManyPairs(hand) == 1;
+        }
+
+        private static IEnumerable<IGrouping<Suit, Card>> CardCountBySuit(List<Card> hand)
+        {
+            return hand.GroupBy(x => x.Suit);
+        }
+
+        private static IEnumerable<IGrouping<Value, Card>> CardCountByValue(List<Card> hand)
         {
             return hand.GroupBy(x => x.Value);
         }
-        
+
         private static List<Card> OrderHandByValue(List<Card> hand)
         {   
 
@@ -140,7 +155,7 @@ namespace PokerDemo
 
             print($"cards ordered by value: {orderedList[0]}, {orderedList[1]}, {orderedList[2]}, {orderedList[3]}, {orderedList[4]}");
             print($"are cards in order: {HandIsOrderedByValue(orderedList)}");
-            print($"are cards sequential: {HandIsSequential(orderedList)}");
+            print($"are cards sequential: {HandIsStraight(orderedList)}");
             return orderedList;
         }
 
@@ -155,7 +170,7 @@ namespace PokerDemo
             return true;
         }
         
-        private static bool HandIsSequential(List<Card> hand)
+        private static bool HandIsStraight(List<Card> hand)
         {
             // TODO: Ace handling. IF orderedList[0].Value is TWO, and orderedList[4].Value is ACE, move ACE to index 0.
             
@@ -188,7 +203,7 @@ namespace PokerDemo
             if (!HandIsFlush(hand))
                 return false;
 
-            if (!HandIsSequential(hand))
+            if (!HandIsStraight(hand))
                 return false;
 
             return true;
@@ -199,7 +214,7 @@ namespace PokerDemo
             if (!HandIsFlush(hand))
                 return false;
 
-            if (!HandIsSequential(hand))
+            if (!HandIsStraight(hand))
             {
                 print($"Hand not sequential");
                 return false;
