@@ -13,12 +13,12 @@ namespace PokerDemo
             var deck = new Deck();
             // var hand = deck.GetHand();
             //var hand = deck.GetHandWithPair();
-            var hand = deck.GetHandWithTwoPair();
+            //var hand = deck.GetHandWithTwoPair();
             //var hand = deck.GetHandWithThreeOfAKind();
             //var hand = deck.GetHandWithStraight();
             //var hand = deck.GetHandWithFlush();
             //var hand = deck.GetHandWithFullHouse();
-            //var hand = deck.GetHandWithFourOfAKind();
+            var hand = deck.GetHandWithFourOfAKind();
             //var hand = deck.GetHandWithStraightFlush();
             //var hand = deck.GetHandWithRoyalFlush();
             
@@ -49,17 +49,28 @@ namespace PokerDemo
             if (HandIsSequential(ordered))
                 return HandType.STRAIGHT;
             
+            if (HandIsFourOfAKind(ordered))
+                return HandType.FOUR_OF_A_KIND;
+            
             return HandType.NOTHING;
         }
 
-        private static void CardCountBySuit(List<Card> hand)
+        private static bool HandIsFourOfAKind(List<Card> hand)
         {
-            var grouped = hand.GroupBy(x => x.Value);
-            
-            foreach (var result in grouped)
+            var results = CardCountBySuit(hand);
+
+            foreach (var result in results)
             {
-                Console.WriteLine(result.Key + " count: " + result.Count());
+                if ((int) result.Count() == 4)
+                    return true;
             }
+
+            return false;
+        }
+
+        private static IEnumerable<IGrouping<Value, Card>> CardCountBySuit(List<Card> hand)
+        {
+            return hand.GroupBy(x => x.Value);
         }
         
         private static List<Card> OrderHandByValue(List<Card> hand)
