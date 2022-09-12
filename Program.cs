@@ -11,7 +11,7 @@ namespace PokerDemo
         static void Main(string[] args)
         {
             var deck = new Deck();
-            //var hand = deck.GetHand();
+            var hand = deck.GetHand();
             //var hand = deck.GetHandWithPair();
             //var hand = deck.GetHandWithTwoPair();
             //var hand = deck.GetHandWithThreeOfAKind();
@@ -21,7 +21,7 @@ namespace PokerDemo
             //var hand = deck.GetHandWithFourOfAKind();
             //var hand = deck.GetHandWithStraightFlush();
             //var hand = deck.GetHandWithRoyalFlush();
-            var hand = deck.GetHandWithAceTwoStraight();
+            //var hand = deck.GetHandWithAceTwoStraight();
 
             print("Your hand is...");
             foreach (var card in hand)
@@ -175,46 +175,46 @@ namespace PokerDemo
         
         private static bool HandIsStraight(List<Card> hand)
         {
-            var newHand = WhereShouldTheAceGo(hand);
-            
-            var startId = (int) newHand[0].Value;
+            if (AceThroughFive(hand))
+                return true;
+
+            var startId = (int) hand[0].Value;
 
             for (int i = 0; i < 5; i++)
             {   
-                if (startId + i != (int) newHand[i].Value)
+                if (startId + i != (int) hand[i].Value)
                     return false;
             }
             
             return true;
         }
 
-        private static List<Card> WhereShouldTheAceGo(List<Card> hand)
+        private static bool AceThroughFive(List<Card> hand)
         {
-            // TODO: Ace handling. IF orderedList[0].Value is TWO, and orderedList[4].Value is ACE, move ACE to index 0.
-            bool lowestCardTwo = hand[0].Value == Value.TWO;
-            bool highestCardAce = hand[^1].Value == Value.ACE;
-            bool hasKing = false;
-            bool hasThree = false;
-
-            if (highestCardAce && lowestCardTwo)
+            foreach (var card in hand)
             {
-                var outputList = new List<Card>();
-                // is there a king or a three?
-                foreach (var card in hand)
+                switch (card.Value)
                 {
-                    if (card.Value == Value.KING) {}
-                        hasKing = true;
-                    if (card.Value == Value.THREE)
-                        hasThree = true;
-                }
-                
-                if (!hasKing && hasThree)
-                {
-                    print("Does not have a king, has a three. Move ace to index 0!");
+                    case Value.SIX:
+                        return false;
+                    case Value.SEVEN:
+                        return false;
+                    case Value.EIGHT:
+                        return false;
+                    case Value.NINE:
+                        return false;
+                    case Value.TEN:
+                        return false;
+                    case Value.JACK:
+                        return false;
+                    case Value.QUEEN:
+                        return false;
+                    case Value.KING:
+                        return false;
                 }
             }
 
-            return hand;
+            return true;
         }
 
         private static bool HandIsFlush(List<Card> hand)
@@ -232,7 +232,9 @@ namespace PokerDemo
         
         private static bool HandIsStraightFlush(List<Card> hand)
         {
-            if (!HandIsFlush(hand) && !HandIsStraight(hand))
+            if (!HandIsFlush(hand))
+                return false;
+            if (!HandIsStraight(hand))
                 return false;
             
             return true;
