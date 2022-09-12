@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
+// using System.Linq;
 using System.Runtime.CompilerServices;
 
 namespace PokerDemo
@@ -11,9 +11,9 @@ namespace PokerDemo
         static void Main(string[] args)
         {
             var deck = new Deck();
-            //var hand = deck.GetHand();
+            // var hand = deck.GetHand();
             //var hand = deck.GetHandWithPair();
-            //var hand = deck.GetHandWithTwoPair();
+            var hand = deck.GetHandWithTwoPair();
             //var hand = deck.GetHandWithThreeOfAKind();
             //var hand = deck.GetHandWithStraight();
             //var hand = deck.GetHandWithFlush();
@@ -35,6 +35,7 @@ namespace PokerDemo
         static HandType EvaluateHand(List<Card> hand)
         {
             List<Card> ordered = OrderHandByValue(hand);
+            CardCountBySuit(ordered);
             
             if (HandIsRoyalFlush(ordered))
                 return HandType.ROYAL_FLUSH;
@@ -51,17 +52,16 @@ namespace PokerDemo
             return HandType.NOTHING;
         }
 
-        private static bool HandIsStraightFlush(List<Card> hand)
+        private static void CardCountBySuit(List<Card> hand)
         {
-            if (!HandIsFlush(hand))
-                return false;
-
-            if (!HandIsSequential(hand))
-                return false;
-
-            return true;
+            var grouped = hand.GroupBy(x => x.Value);
+            
+            foreach (var result in grouped)
+            {
+                Console.WriteLine(result.Key + " count: " + result.Count());
+            }
         }
-
+        
         private static List<Card> OrderHandByValue(List<Card> hand)
         {   
 
@@ -103,20 +103,7 @@ namespace PokerDemo
 
             return true;
         }
-
-        private static bool HandIsFlush(List<Card> hand)
-        {
-            Suit firstSuit = hand[0].Suit;
-
-            foreach (var card in hand)
-            {
-                if (card.Suit != firstSuit)
-                    return false;
-            }
-            
-            return true;
-        }
-
+        
         private static bool HandIsSequential(List<Card> hand)
         {
             // TODO: Ace handling. IF orderedList[0].Value is TWO, and orderedList[4].Value is ACE, move ACE to index 0.
@@ -132,6 +119,30 @@ namespace PokerDemo
             return true;
         }
 
+        private static bool HandIsFlush(List<Card> hand)
+        {
+            Suit firstSuit = hand[0].Suit;
+
+            foreach (var card in hand)
+            {
+                if (card.Suit != firstSuit)
+                    return false;
+            }
+            
+            return true;
+        }
+        
+        private static bool HandIsStraightFlush(List<Card> hand)
+        {
+            if (!HandIsFlush(hand))
+                return false;
+
+            if (!HandIsSequential(hand))
+                return false;
+
+            return true;
+        }
+        
         private static bool HandIsRoyalFlush(List<Card> hand)
         {
             if (!HandIsFlush(hand))
