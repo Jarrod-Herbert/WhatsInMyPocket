@@ -11,7 +11,7 @@ namespace PokerDemo
         static void Main(string[] args)
         {
             var deck = new Deck();
-            // var hand = deck.GetHand();
+            //var hand = deck.GetHand();
             //var hand = deck.GetHandWithPair();
             //var hand = deck.GetHandWithTwoPair();
             //var hand = deck.GetHandWithThreeOfAKind();
@@ -20,7 +20,7 @@ namespace PokerDemo
             //var hand = deck.GetHandWithFullHouse();
             //var hand = deck.GetHandWithFourOfAKind();
             //var hand = deck.GetHandWithStraightFlush();
-            var hand = deck.GetHandWithRoyalFlush();
+            //var hand = deck.GetHandWithRoyalFlush();
             
             print("Your hand is...");
             foreach(var card in hand)
@@ -39,13 +39,27 @@ namespace PokerDemo
             if (HandIsRoyalFlush(ordered))
                 return HandType.ROYAL_FLUSH;
             
-            // if (HandIsStraightFlush(hand))
-                // return HandType.STRAIGHT_FLUSH;
+            if (HandIsStraightFlush(ordered))
+                return HandType.STRAIGHT_FLUSH;
             
             if (HandIsFlush(ordered))
                 return HandType.FLUSH;
+
+            if (HandIsSequential(ordered))
+                return HandType.STRAIGHT;
             
             return HandType.NOTHING;
+        }
+
+        private static bool HandIsStraightFlush(List<Card> hand)
+        {
+            if (!HandIsFlush(hand))
+                return false;
+
+            if (!HandIsSequential(hand))
+                return false;
+
+            return true;
         }
 
         private static List<Card> OrderHandByValue(List<Card> hand)
