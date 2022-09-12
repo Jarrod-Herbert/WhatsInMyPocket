@@ -127,4 +127,15 @@ public class Deck
         hand.Add(new Card(Suit.DIAMONDS, Value.ACE));
         return hand;
     }
+
+    public List<Card> GetHandWithAceTwoStraight()
+    {
+        var hand = new List<Card>(5);
+        hand.Add(new Card(Suit.SPADES, Value.TWO));
+        hand.Add(new Card(Suit.CLUBS, Value.THREE));
+        hand.Add(new Card(Suit.HEARTS, Value.FOUR));
+        hand.Add(new Card(Suit.DIAMONDS, Value.FIVE));
+        hand.Add(new Card(Suit.SPADES, Value.ACE));
+        return hand;
+    }
 }

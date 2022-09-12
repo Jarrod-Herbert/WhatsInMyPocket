@@ -11,7 +11,7 @@ namespace PokerDemo
         static void Main(string[] args)
         {
             var deck = new Deck();
-            var hand = deck.GetHand();
+            //var hand = deck.GetHand();
             //var hand = deck.GetHandWithPair();
             //var hand = deck.GetHandWithTwoPair();
             //var hand = deck.GetHandWithThreeOfAKind();
@@ -21,6 +21,7 @@ namespace PokerDemo
             //var hand = deck.GetHandWithFourOfAKind();
             //var hand = deck.GetHandWithStraightFlush();
             //var hand = deck.GetHandWithRoyalFlush();
+            var hand = deck.GetHandWithAceTwoStraight();
 
             print("Your hand is...");
             foreach (var card in hand)
@@ -36,7 +37,6 @@ namespace PokerDemo
         static HandType EvaluateHand(List<Card> hand)
         {
             List<Card> ordered = OrderHandByValue(hand);
-            CardCountBySuit(ordered);
 
             if (HandIsRoyalFlush(ordered))
                 return HandType.ROYAL_FLUSH;
@@ -69,40 +69,6 @@ namespace PokerDemo
             return HandType.HIGH_CARD;
         }
 
-        private static bool HandIsFullHouse(List<Card> hand)
-        {
-            if (HandIsThreeOfAKind(hand) && HandIsPair(hand))
-                return true;
-
-            return false;
-        }
-
-        private static bool HandIsThreeOfAKind(List<Card> hand)
-        {
-            var results = CardCountByValue(hand);
-
-            foreach (var result in results)
-            {
-                if ((int) result.Count() == 3)
-                    return true;
-            }
-
-            return false;
-        }
-
-        private static bool HandIsFourOfAKind(List<Card> hand)
-        {
-            var results = CardCountByValue(hand);
-
-            foreach (var result in results)
-            {
-                if ((int) result.Count() == 4)
-                    return true;
-            }
-
-            return false;
-        }
-
         private static int HowManyPairs(List<Card> hand)
         {
             var results = CardCountByValue(hand);
@@ -115,21 +81,6 @@ namespace PokerDemo
             }
 
             return i;
-        }
-
-        private static bool HandIsTwoPair(List<Card> hand)
-        {
-            return HowManyPairs(hand) == 2;
-        }
-
-        private static bool HandIsPair(List<Card> hand)
-        {
-            return HowManyPairs(hand) == 1;
-        }
-
-        private static IEnumerable<IGrouping<Suit, Card>> CardCountBySuit(List<Card> hand)
-        {
-            return hand.GroupBy(x => x.Suit);
         }
 
         private static IEnumerable<IGrouping<Value, Card>> CardCountByValue(List<Card> hand)
@@ -179,19 +130,91 @@ namespace PokerDemo
             return true;
         }
         
+        private static bool HandIsPair(List<Card> hand)
+        {
+            return HowManyPairs(hand) == 1;
+        }
+        private static bool HandIsTwoPair(List<Card> hand)
+        {
+            return HowManyPairs(hand) == 2;
+        }
+        
+        private static bool HandIsFullHouse(List<Card> hand)
+        {
+            if (HandIsThreeOfAKind(hand) && HandIsPair(hand))
+                return true;
+
+            return false;
+        }
+
+        private static bool HandIsThreeOfAKind(List<Card> hand)
+        {
+            var results = CardCountByValue(hand);
+
+            foreach (var result in results)
+            {
+                if ((int) result.Count() == 3)
+                    return true;
+            }
+
+            return false;
+        }
+
+        private static bool HandIsFourOfAKind(List<Card> hand)
+        {
+            var results = CardCountByValue(hand);
+
+            foreach (var result in results)
+            {
+                if ((int) result.Count() == 4)
+                    return true;
+            }
+
+            return false;
+        }
+        
         private static bool HandIsStraight(List<Card> hand)
         {
-            // TODO: Ace handling. IF orderedList[0].Value is TWO, and orderedList[4].Value is ACE, move ACE to index 0.
+            var newHand = WhereShouldTheAceGo(hand);
             
-            var startId = (int) hand[0].Value;
+            var startId = (int) newHand[0].Value;
 
             for (int i = 0; i < 5; i++)
             {   
-                if (startId + i != (int) hand[i].Value)
+                if (startId + i != (int) newHand[i].Value)
                     return false;
             }
             
             return true;
+        }
+
+        private static List<Card> WhereShouldTheAceGo(List<Card> hand)
+        {
+            // TODO: Ace handling. IF orderedList[0].Value is TWO, and orderedList[4].Value is ACE, move ACE to index 0.
+            bool lowestCardTwo = hand[0].Value == Value.TWO;
+            bool highestCardAce = hand[^1].Value == Value.ACE;
+            bool hasKing = false;
+            bool hasThree = false;
+
+            if (highestCardAce && lowestCardTwo)
+            {
+                var outputList = new List<Card>();
+                // is there a king or a three?
+                foreach (var card in hand)
+                {
+                    if (card.Value == Value.KING) {}
+                        hasKing = true;
+                    if (card.Value == Value.THREE)
+                        hasThree = true;
+                }
+                
+                if (!hasKing && hasThree)
+                {
+                    print("Does not have a king, has a three. Move ace to index 0!");
+                }
+            }
+
+            return hand;
         }
 
         private static bool HandIsFlush(List<Card> hand)
@@ -209,12 +232,9 @@ namespace PokerDemo
         
         private static bool HandIsStraightFlush(List<Card> hand)
         {
-            if (!HandIsFlush(hand))
+            if (!HandIsFlush(hand) && !HandIsStraight(hand))
                 return false;
-
-            if (!HandIsStraight(hand))
-                return false;
-
+            
             return true;
         }
         
