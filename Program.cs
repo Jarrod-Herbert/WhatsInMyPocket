@@ -11,7 +11,7 @@ namespace PokerDemo
         static void Main(string[] args)
         {
             var deck = new Deck();
-            //var hand = deck.GetHand();
+            var hand = deck.GetHand();
             //var hand = deck.GetHandWithPair();
             //var hand = deck.GetHandWithTwoPair();
             //var hand = deck.GetHandWithThreeOfAKind();
@@ -46,9 +46,9 @@ namespace PokerDemo
 
             if (HandIsFourOfAKind(ordered))
                 return HandType.FOUR_OF_A_KIND;
-
-            // if (HandIsFullHouse(ordered))
-            // return HandType.FULL_HOUSE;
+            
+            if (HandIsFullHouse(ordered))
+                return HandType.FULL_HOUSE;
 
             if (HandIsFlush(ordered))
                 return HandType.FLUSH;
@@ -66,6 +66,14 @@ namespace PokerDemo
                 return HandType.PAIR;
 
             return HandType.NOTHING;
+        }
+
+        private static bool HandIsFullHouse(List<Card> hand)
+        {
+            if (HandIsThreeOfAKind(hand) && HandIsPair(hand))
+                return true;
+
+            return false;
         }
 
         private static bool HandIsThreeOfAKind(List<Card> hand)
@@ -96,7 +104,7 @@ namespace PokerDemo
 
         private static int HowManyPairs(List<Card> hand)
         {
-            var results = CardCountBySuit(hand);
+            var results = CardCountByValue(hand);
             int i = 0;
 
             foreach (var result in results)
@@ -110,7 +118,7 @@ namespace PokerDemo
 
         private static bool HandIsTwoPair(List<Card> hand)
         {
-            return HowManyPairs(hand) == 1;
+            return HowManyPairs(hand) == 2;
         }
 
         private static bool HandIsPair(List<Card> hand)
